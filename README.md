@@ -1,36 +1,153 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gerenciamento de Produtos - Frontend
 
-## Getting Started
+Aplicação Next.js completa para gerenciamento de produtos (CRUD) que consome uma API REST.
 
-First, run the development server:
+## 🚀 Tecnologias
 
-```bash
+- **Next.js 15** (App Router)
+- **React 18+**
+- **TypeScript**
+- **Axios** para requisições HTTP
+- **Tailwind CSS** para estilização
+
+## 📋 Funcionalidades
+
+- ✅ Listagem de produtos (tabela e cards)
+- ✅ Busca/filtro por nome
+- ✅ Criar novo produto
+- ✅ Editar produto existente
+- ✅ Deletar produto (com confirmação)
+- ✅ Visualizar detalhes do produto
+- ✅ Validação de formulários
+- ✅ Feedback visual (toasts, loading states)
+- ✅ Design responsivo (mobile e desktop)
+- ✅ Formatação de preço em Real (R$)
+
+## 🛠️ Instalação e Execução
+
+### Pré-requisitos
+
+- Node.js 18+ instalado
+- API backend rodando (endpoints `/produtos`)
+
+### Passo a Passo
+
+1. **Clone ou baixe o projeto**
+
+2. **Instale as dependências**
+\`\`\`bash
+npm install
+\`\`\`
+
+3. **Configure a URL da API**
+
+Crie um arquivo `.env.local` na raiz do projeto:
+
+\`\`\`env
+NEXT_PUBLIC_API_BASE_URL=http://localhost:3000
+\`\`\`
+
+Ajuste a URL conforme o endereço da sua API backend.
+
+4. **Execute o projeto**
+\`\`\`bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+\`\`\`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+A aplicação estará disponível em `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+5. **Build para produção**
+\`\`\`bash
+npm run build
+npm start
+\`\`\`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📁 Estrutura do Projeto
 
-## Learn More
+\`\`\`
+app/
+├── components/          # Componentes reutilizáveis
+│   ├── Toast.tsx
+│   ├── LoadingSpinner.tsx
+│   ├── ConfirmModal.tsx
+│   ├── ProductCard.tsx
+│   ├── ProductTable.tsx
+│   ├── ProductFormModal.tsx
+│   └── SearchBar.tsx
+├── contexts/           # Context API (Toast)
+│   └── ToastContext.tsx
+├── hooks/              # Custom hooks
+│   ├── useFetchProdutos.ts
+│   └── useProduto.ts
+├── services/           # Integração com API
+│   ├── api.ts
+│   └── produtoService.ts
+├── utils/              # Funções utilitárias
+│   └── formatters.ts
+├── produto/[id]/       # Página de detalhes
+│   └── page.tsx
+├── layout.tsx          # Layout principal
+├── page.tsx            # Página inicial (listagem)
+└── globals.css         # Estilos globais (Tailwind)
+\`\`\`
 
-To learn more about Next.js, take a look at the following resources:
+## 🌐 Deploy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Vercel (Recomendado para Next.js)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Faça push do código para GitHub
+2. Conecte seu repositório no [Vercel](https://vercel.com)
+3. Configure a variável de ambiente:
+   - Settings → Environment Variables
+   - Adicione: `NEXT_PUBLIC_API_BASE_URL` com a URL da sua API em produção
+4. Deploy automático!
 
-## Deploy on Vercel
+### Netlify
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Faça build: `npm run build`
+2. Configure o comando de build: `npm run build`
+3. Configure o diretório de publicação: `.next`
+4. Adicione a variável: `NEXT_PUBLIC_API_BASE_URL`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Importante:** Certifique-se de que sua API backend está acessível publicamente e configurada para aceitar requisições do domínio do frontend (CORS).
+
+## 🔌 Endpoints da API (Backend)
+
+A aplicação espera que a API tenha os seguintes endpoints:
+
+- `GET /produtos` - Lista todos os produtos
+- `GET /produtos/:id` - Busca produto por ID
+- `POST /produtos` - Cria novo produto
+- `PUT /produtos/:id` - Atualiza produto
+- `DELETE /produtos/:id` - Remove produto
+
+**Estrutura esperada do produto:**
+\`\`\`json
+{
+  "id": "string",
+  "nome": "string",
+  "preco": number,
+  "categoria": "string",
+  "createdAt": "ISO date string",
+  "updatedAt": "ISO date string" (opcional)
+}
+\`\`\`
+
+## 🐛 Troubleshooting
+
+**Erro de CORS:**
+- Configure o backend para aceitar requisições do frontend
+- Adicione headers CORS apropriados na API
+
+**API não conecta:**
+- Verifique se `NEXT_PUBLIC_API_BASE_URL` está configurado corretamente
+- Confirme que a API está rodando e acessível
+- Verifique o console do navegador para erros de rede
+
+**Produtos não aparecem:**
+- Abra o DevTools (F12) → Network para ver as requisições
+- Verifique se a API está retornando dados no formato esperado
+
+## 📝 Licença
+
+Este projeto é livre para uso educacional e comercial.
