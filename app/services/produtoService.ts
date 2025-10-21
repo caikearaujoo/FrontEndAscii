@@ -1,18 +1,5 @@
-// src/services/produtoService.ts
-
-// 1. REMOVA a importação do 'axios' puro
-// import axios from "axios";
-
-// 2. IMPORTE a sua instância 'api' configurada do arquivo api.ts
-// (Ajuste o caminho se for diferente, ex: '../api' ou './api')
 import api from "./api";
 
-// 3. REMOVA a criação da instância duplicada
-// const api = axios.create({
-//   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-// });
-
-// A interface não muda
 export interface Produto {
   id: string;
   nome: string;
@@ -20,12 +7,14 @@ export interface Produto {
   categoria: string;
   createdAt: string;
   updatedAt?: string;
+  imagemUrl: string | null;
 }
 
-// O resto do seu código já usava 'api',
-// então agora ele vai usar a instância importada e correta.
 export const getProdutos = async (): Promise<Produto[]> => {
-  const response = await api.get<Produto[]>("/produtos");
+  // Adiciona um "cache buster"
+  const response = await api.get<Produto[]>(
+    `/produtos?_t=${new Date().getTime()}`
+  );
   return response.data;
 };
 

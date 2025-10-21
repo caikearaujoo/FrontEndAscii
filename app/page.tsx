@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+// --- MUDANÇA 1: Importe o 'useEffect' ---
+import { useState, useEffect } from "react";
 import { useFetchProdutos } from "./hooks/useFetchProdutos";
 import {
   deleteProduto,
@@ -28,8 +29,33 @@ export default function HomePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [viewMode, setViewMode] = useState<"table" | "cards">("table");
 
-  const filteredProducts = produtos.filter((product) =>
-    product.nome.toLowerCase().includes(searchTerm.toLowerCase())
+  // --- MUDANÇA 2: Adicione o hook de "Polling" (Auto-Refresh) ---
+  useEffect(() => {
+    // 1. Verifique se algum produto na lista ainda está sendo gerado
+    const algumProcessando = produtos.some((p) => p.imagemUrl === null);
+
+    // 2. Se sim, crie um "timer" para verificar novamente
+    if (algumProcessando) {
+      const timer = setTimeout(() => {
+        console.log("Polling: Verificando se as imagens foram geradas...");
+        refetch(); // Chama o refetch do seu hook!
+      }, 5000); // Verifica a cada 5 segundos
+
+      // 3. (Importante) Função de limpeza que roda se o componente
+      // for "desmontado" ou se a lista de 'produtos' mudar.
+      return () => clearTimeout(timer);
+    }
+  }, [produtos, refetch]); // Dependências: Roda este efeito sempre que 'produtos' ou 'refetch' mudarem
+  // --- FIM DA MUDANÇA 2 ---
+
+  const lowerSearchTerm = searchTerm.toLowerCase();
+
+  const filteredProducts = produtos.filter(
+    (product) =>
+      // 1. Procura no NOME
+      product.nome.toLowerCase().includes(lowerSearchTerm) ||
+      // 2. OU Procura no ID
+      product.id.toLowerCase().includes(lowerSearchTerm)
   );
 
   const handleCreate = () => {
@@ -110,12 +136,13 @@ export default function HomePage() {
 
   return (
     <div className="space-y-6">
+      {/* O resto do seu JSX (Interface) fica IDÊNTICO */}
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
         <div className="flex-1 w-full sm:max-w-md">
           <SearchBar
             value={searchTerm}
             onChange={setSearchTerm}
-            placeholder="Buscar produtos por nome..."
+            placeholder="Buscar produtos por nome ou ID..."
           />
         </div>
         <div className="flex gap-2 w-full sm:w-auto">
